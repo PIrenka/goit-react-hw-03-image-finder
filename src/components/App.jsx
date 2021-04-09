@@ -1,10 +1,13 @@
-import "./App.css";
+import './App.scss';
 
-// import Comp1 from './Comp1'
+import Modal from './Modal';
 
 function App() {
-  return <div className="App">PUT_HERE_YOUR_RENDER_DATAS_AND_TAGS</div>;
-  // <Comp1 />;
+  return (
+    <div className="App">
+      <Modal />
+    </div>
+  );
 }
 
 export default App;

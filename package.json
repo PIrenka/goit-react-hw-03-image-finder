@@ -1,9 +1,11 @@
 {
-  "name": "CHANGE_THE_NAME",
+  "name": "goit-react-hw-03-image-finder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pirenka.github.io/__PUT_HERE_THE_NAME__",
+  "homepage": "https://pirenka.github.io/goit-react-hw-03-image-finder",
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
@@ -11,6 +13,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "sass": "^1.32.8",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
