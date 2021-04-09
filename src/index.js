@@ -1,14 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
 
-import "./styles.scss";
+// import "./styles.scss";
+import './styles/general.scss';
 import 'modern-normalize/modern-normalize.css';
 
-import App from "./components/App";
+import styles from './components/App.module.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App className={styles.App} />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root'),
 );

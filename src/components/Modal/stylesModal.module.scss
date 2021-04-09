@@ -2,6 +2,43 @@
   background-color: bisque;
   font: size 40px;
 
-  max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 24px);
+  min-height: 300px;
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  // max-width: calc(100vw - 48px);
+  // max-height: calc(100vh - 24px);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 4px;
+  box-shadow: 10px 8px 28px 3px rgba(255, 111, 249, 0.82);
 }
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 192, 203, 0.452);
+}
+
+// .Overlay {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: rgba(0, 0, 0, 0.8);
+//   z-index: 1200;
+// }
+
+// .Modal {
+//   max-width: calc(100vw - 48px);
+//   max-height: calc(100vh - 24px);
+// }
