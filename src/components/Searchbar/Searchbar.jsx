@@ -13,8 +13,8 @@ class Searchbar extends Component {
           <input
             className={styles.SearchForm_input}
             type="text"
-            autocomplete="off"
-            autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
           />
         </form>

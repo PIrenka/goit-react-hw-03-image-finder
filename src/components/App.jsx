@@ -1,23 +1,47 @@
 import { Component } from 'react';
 
-// import Container from './Container';
-
 import styles from './App.module.scss';
 
 import Modal from './Modal';
+//=================icons for modal window================
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
 import IconButton from '@material-ui/core/IconButton';
+//=======================================================
+
+import imagesApi from '../servicesApi/images-api';
 
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
-
+// import ArticleList from './ImageGallery';
 import Container from './Container';
 
+//================Loaders===============================
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
+import ImageGrid from './Loader/LoaderFromGH';
+import Loader from 'react-loader-spinner';
+//======================================================
+
 class App extends Component {
-  state = { showModal: false };
+  state = { showModal: false, articles: [], isLoading: false, images: [] };
 
   componentDidMount() {
     console.log('componentDidMount');
+    this.setState({ isLoading: true });
+    imagesApi
+      .fetchImages()
+      .then(images => this.setState({ images: images, isLoading: false }))
+      .catch(err => console.log(err));
+    // axios
+    //   .get('http://localhost:3004/posts')
+    //   // .then(res => console.log('res: ', res))
+    //   .then(res => console.log('res.data: ', res.data));
+
+    // axios
+    //   .get('https://hn.algolia.com/api/v1/search?query=react')
+    //   .then(response =>
+    //     this.setState({ articles: response.data.hits, isLoading: false }),
+    //   );
   }
 
   componentDidUpdate() {
@@ -53,7 +77,8 @@ class App extends Component {
   };
 
   render() {
-    const { showModal } = this.state;
+    const { showModal, articles, images, isLoading } = this.state;
+
     return (
       <div className={styles.App}>
         <Container>
@@ -66,26 +91,39 @@ class App extends Component {
         </Container>
 
         {showModal && (
-          <Modal>
-            <>
-              {/* <h2>modal</h2> */}
-              <IconButton onClick={this.handelToggleModal}>
-                <HighlightOffOutlinedIcon />
-              </IconButton>
-              <h2>the title of the modal</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat,
-                qui.
-              </p>
-              <button type="button" onClick={this.handelToggleModal}>
-                close
-              </button>
-            </>
-          </Modal>
+          <>
+            <Loader
+              type="ThreeDots"
+              color="#f5dbee"
+              height={80}
+              width={80}
+              timeout={1000} //
+            />
+            <Modal>
+              <>
+                <h1>modal</h1>
+                <IconButton onClick={this.handelToggleModal}>
+                  <HighlightOffOutlinedIcon />
+                </IconButton>
+                <h2>the title of the modal</h2>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Fugiat, qui.
+                </p>
+                <button type="button" onClick={this.handelToggleModal}>
+                  close
+                </button>
+              </>
+            </Modal>
+          </>
         )}
         <Searchbar />
+
         <Container>
-          <ImageGallery />
+          {isLoading && <ImageGrid />}
+          <ImageGallery images={images} />
+          {/* {isLoading && <p>Loading...</p>} */}
+          {/* {articles.length > 0 ? <ArticleList articles={articles} /> : null} */}
         </Container>
       </div>
     );
