@@ -1,130 +1,158 @@
-import { Component } from 'react';
-
-import styles from './App.module.scss';
-
-import Modal from './Modal';
-//=================icons for modal window================
-import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
-import IconButton from '@material-ui/core/IconButton';
-//=======================================================
+import React, { Component } from 'react';
 
 import imagesApi from '../servicesApi/images-api';
 
+import Container from './Container';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
-// import ArticleList from './ImageGallery';
-import Container from './Container';
+import Button from './Button';
+import Modal from './Modal';
 
-//================Loaders===============================
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import styles from './App.module.scss';
 
+// //================Loaders===============================
 import ImageGrid from './Loader/LoaderFromGH';
-import Loader from 'react-loader-spinner';
-//======================================================
+// //======================================================
+// //=================icons for modal window================
+import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
+import IconButton from '@material-ui/core/IconButton';
+// //=======================================================
 
 class App extends Component {
-  state = { showModal: false, articles: [], isLoading: false, images: [] };
+  state = {
+    images: [],
+    searchQuery: '',
+    currentPage: 1,
 
-  componentDidMount() {
-    console.log('componentDidMount');
+    error: null,
+    modalURL: '',
+    scrollScr: false,
+    enterError: false,
+    showModal: false,
+    isLoading: false,
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.searchQuery !== this.state.searchQuery) {
+      this.fetchImage();
+    }
+  }
+
+  addImages = query => {
+    this.setState({
+      searchQuery: query,
+      images: [],
+      currentPage: 1,
+      error: null,
+    });
+  };
+
+  fetchImage = () => {
+    const { searchQuery, currentPage } = this.state;
     this.setState({ isLoading: true });
+
+    if (searchQuery.length <= 2) {
+      this.setState({ isLoading: false });
+      return;
+    }
+
     imagesApi
-      .fetchImages()
-      .then(images => this.setState({ images: images, isLoading: false }))
-      .catch(err => console.log(err));
-    // axios
-    //   .get('http://localhost:3004/posts')
-    //   // .then(res => console.log('res: ', res))
-    //   .then(res => console.log('res.data: ', res.data));
+      .fetchImages({ searchQuery, currentPage })
+      .then(hits =>
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          currentPage: prevState.currentPage + 1,
+        })),
+      )
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
+  };
 
-    // axios
-    //   .get('https://hn.algolia.com/api/v1/search?query=react')
-    //   .then(response =>
-    //     this.setState({ articles: response.data.hits, isLoading: false }),
-    //   );
-  }
-
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
-
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
-  }
-
-  //================================================================
-  //---эти два метода можно заменить одним: переключатель Модалки---
-  //================================================================
-  // handelOpenModal = () => {
-  //   return this.setState({ showModal: true });
-  // };
-  // handelCloseModal = event => {
-  //   console.log('close modal by clicking');
-  //   console.log('event: ', event);
-  //   console.log('event.target: ', event.target);
-  //   console.log('event.currentTarget: ', event.currentTarget);
-  //   return this.setState({ showModal: false });
-  // };
-  //================================================================
-
-  //-------------переключатель Модалки------------------------------
   handelToggleModal = () => {
-    const { showModal } = this.state;
     console.log('use toggle modal');
     return this.setState(({ showModal }) => {
       return { showModal: !showModal };
     });
   };
 
-  render() {
-    const { showModal, articles, images, isLoading } = this.state;
+  getModalImage = largeImageURL => {
+    this.setState({ modalURL: largeImageURL }.modalurl);
+    this.toogleModal();
+  };
 
+  render() {
+    const {
+      showModal,
+      images,
+      isLoading,
+      searchQuery,
+      modalURL,
+      error,
+    } = this.state;
     return (
       <div className={styles.App}>
         <Container>
-          <>
-            <h1>Hello 03-image</h1>
-            <button type="button" onClick={this.handelToggleModal}>
-              OPEN MODAL for img
-            </button>
-          </>
+          <h1>Hello HW 03-image</h1>
         </Container>
-
-        {showModal && (
-          <>
-            <Loader
-              type="ThreeDots"
-              color="#f5dbee"
-              height={80}
-              width={80}
-              timeout={1000} //
-            />
-            <Modal>
-              <>
-                <h1>modal</h1>
-                <IconButton onClick={this.handelToggleModal}>
-                  <HighlightOffOutlinedIcon />
-                </IconButton>
-                <h2>the title of the modal</h2>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Fugiat, qui.
-                </p>
-                <button type="button" onClick={this.handelToggleModal}>
-                  close
-                </button>
-              </>
-            </Modal>
-          </>
-        )}
-        <Searchbar />
-
+        <Searchbar onSubmit={this.addImages} />
         <Container>
           {isLoading && <ImageGrid />}
-          <ImageGallery images={images} />
-          {/* {isLoading && <p>Loading...</p>} */}
-          {/* {articles.length > 0 ? <ArticleList articles={articles} /> : null} */}
+          {images.length > 0 ? (
+            <ImageGallery
+              images={images}
+              title={searchQuery}
+              onClick={this.getModalImage}
+            >
+              <Modal modalURL={modalURL} onClose={this.handelToggleModal}>
+                <img src={modalURL} alt="" />
+              </Modal>
+            </ImageGallery>
+          ) : (
+            <p>Here you will receive images after searching...</p>
+          )}
+          {images.length === 0 && searchQuery.length > 0 && (
+            <p>oooooopppppsss it looks there is nothing to show</p>
+          )}
         </Container>
+        <Container>
+          {images.length > 0 && (
+            <Button onClick={this.fetchImage} isLoading={isLoading} />
+          )}
+        </Container>
+        {/* 
+        {showModal && (
+          //         <>
+          //           <Loader
+          //             type="ThreeDots"
+          //             color="#f5dbee"
+          //             height={80}
+          //             width={80}
+          //             timeout={1000} //
+          //           />
+          <Modal
+            onClick={this.handelToggleModal}
+            onClose={this.handelToggleModal}
+          >
+            <>
+              <h1>modal</h1>
+              <IconButton onClose={this.handelToggleModal}>
+                <HighlightOffOutlinedIcon />
+              </IconButton>
+              <p>the body of the modal</p>
+              {<img src={modalURL} />}
+              <button type="button" onClick={this.handelToggleModal}>
+                close
+              </button>
+            </>
+          </Modal>
+        )} */}
+
+        {/* <ImageGallery list={images} onClick={this.openModal} />
+        {showModal && (
+          <Modal onClose={this.closeModal}>
+            <img src={imageForModal} alt="" />
+          </Modal>
+        )}  */}
       </div>
     );
   }
