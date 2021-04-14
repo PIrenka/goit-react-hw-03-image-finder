@@ -19,6 +19,11 @@ import IconButton from '@material-ui/core/IconButton';
 // //=======================================================
 
 class App extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.listRef = React.createRef();
+  // }
+
   state = {
     images: [],
     searchQuery: '',
@@ -34,9 +39,38 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevState.searchQuery !== this.state.searchQuery) {
+      console.log('fetching images...');
       this.fetchImage();
     }
+
+    // //==========================for scrol=========================
+    // if (snapshot !== null) {
+    //   const list = this.listRef.current;
+    //   console.log('snapshot: ', list.scrollHeight, snapshot);
+    //   if (this.state.scrollScr) {
+    //     window.scrollTo({
+    //       top:
+    //         document.documentElement.scrollTop + (list.scrollHeight - snapshot),
+    //       behavior: 'smooth',
+    //     });
+    //   } else {
+    //     this.setState({ scrollScr: true });
+    //   }
+    // }
+    // //============================================================
   }
+
+  //============================================================
+  // Пример прокрутки взят из документации https://ru.reactjs.org/docs/react-component.html#getsnapshotbeforeupdate
+  // getSnapshotBeforeUpdate(prevProps, prevState) {
+  //   if (prevState.images.length < this.state.images.length) {
+  //     const list = this.listRef.current;
+  //     // console.log("set snapshot: ", list.scrollHeight, list.scrollTop)
+  //     return list.scrollHeight - list.scrollTop;
+  //   }
+  //   return null;
+  // }
+  //============================================================
 
   addImages = query => {
     this.setState({
@@ -44,11 +78,12 @@ class App extends Component {
       images: [],
       currentPage: 1,
       error: null,
+      // scrollScr: false, // - for scroll
     });
   };
 
   fetchImage = () => {
-    const { searchQuery, currentPage, showModal } = this.state;
+    const { searchQuery, currentPage } = this.state;
     this.setState({ isLoading: true });
 
     if (searchQuery.length <= 2) {
@@ -65,6 +100,8 @@ class App extends Component {
         })),
       )
       // .catch(error => this.setState({ error }))
+      // .catch(() => {
+      //   this.setState(({ showModal }) => ({ showModal: !showModal }));
       .catch(() => {
         this.handelToggleModal();
       })
@@ -91,9 +128,12 @@ class App extends Component {
       isLoading,
       searchQuery,
       modalURL,
+      largeImageURL,
       error,
     } = this.state;
+
     return (
+      // <div className={styles.App} ref={this.listRef}>
       <div className={styles.App}>
         <Container>
           <h1>Hello HW 03-image</h1>
@@ -107,26 +147,20 @@ class App extends Component {
                 images={images}
                 title={searchQuery}
                 onClick={this.handelToggleModal}
-              >
-                {/* <Modal modalURL={modalURL} onClose={this.getModalImage}>
-                <img src={modalURL} alt="" />
-              </Modal> */}
-              </ImageGallery>
+              ></ImageGallery>
               {showModal && (
-                <Modal modalURL={modalURL} onClick={this.handelToggleModal}>
+                <Modal
+                  // onClick={this.getModalImage}
+                  // modalURL={modalURL}
+                  modalURL={largeImageURL}
+                  onClick={this.handelToggleModal}
+                >
                   <IconButton onClick={this.handelToggleModal}>
                     <HighlightOffOutlinedIcon />
                   </IconButton>
-                  <img src={modalURL} alt="" />
+                  <img src={modalURL} alt={searchQuery} />
                 </Modal>
               )}
-              {/* <Modal
-                modalURL={modalURL}
-                // onClose={this.getModalImage}
-                onClick={this.handelToggleModal}
-              >
-                <img src={modalURL} alt="" />
-              </Modal> */}
             </>
           ) : (
             <p className={styles.introText}>
@@ -134,15 +168,11 @@ class App extends Component {
             </p>
           )}
           {images.length === 0 && searchQuery.length > 0 && (
-            <Modal
-              onClick={this.handelToggleModal}
-              onClose={this.handelToggleModal}
-            >
-              }
+            <Modal onClick={this.handelToggleModal}>
               <button
                 type="button"
                 // onClick={({ showModal }) => ({ showModal: !showModal })}
-                onClose={this.handelToggleModal}
+                onClick={this.handelToggleModal}
               >
                 XXX CLOSE XXX
               </button>
@@ -151,17 +181,12 @@ class App extends Component {
               </p>
             </Modal>
           )}
-          {/* {images.length === 0 && searchQuery.length > 0 && (
-            <p>oooooopppppsss it looks there is nothing to show</p>
-          )} */}
         </Container>
         <Container>
           {images.length > 0 && (
             <Button onClick={this.fetchImage} isLoading={isLoading} />
           )}
         </Container>
-        ================================================================================
-        ================================================================================
       </div>
     );
   }

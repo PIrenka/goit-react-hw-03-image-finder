@@ -3,7 +3,7 @@ import styles from './stylesSearchbar.module.scss';
 
 class Searchbar extends Component {
   state = {
-    searchQuery: '', //- задаем изначально пустое значения поиска
+    searchQuery: '', //- задаем изначально пустое значения для поиска
     image: [],
   };
 
@@ -21,7 +21,7 @@ class Searchbar extends Component {
     // const { searchQuery } = this.state;
 
     ev.preventDefault(); //- чтоб не перезагружалась страница при сабмите
-    this.props.onSubmit(this.state.searchQuery); //- тут нахордится значения запроса (query) из метода кторой передаеться как прор - addImages(это и есть onSubmit), и потом мы его используем для рендера картинок по данному запросу (54мин 6-го видео)
+    this.props.onSubmit(this.state.searchQuery); //-(берем из пропов метод и используем его подставив значение this.state.searchQuery) тут нахордится значения запроса (query) из метода кторой передаеться как прор - addImages(это и есть onSubmit), и потом мы его используем для рендера картинок по данному запросу (54мин 6-го видео)
     // this.props.onSubmit(searchQuery);
     this.setState({ searchQuery: '' }); // - это для того чтоб обновить строку ввода для след. запроса. так после ввода слова, оно очистится, и так как в атрибутах инпута стоит онФокус, после поиска мы можем сразу набирать новое слово и оно уже будет писаться в инпут
   }; //- для добавления картинок по запросу

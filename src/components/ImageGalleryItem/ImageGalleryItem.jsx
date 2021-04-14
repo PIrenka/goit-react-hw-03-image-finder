@@ -7,17 +7,21 @@ const ImageGalleryItem = ({
   webformatURL,
   largeImageURL,
   onClick,
-}) => (
-  <li className={styles.ImageGalleryItem}>
-    <img
-      src={webformatURL}
-      alt={`${altTitle} ${webformatURL} ${tags}`}
-      // modalurl={largeImageURL}
-      className={styles.ImageGalleryItem_image}
-      onClick={() => onClick({ largeImageURL })}
-    />
-  </li>
-);
+}) => {
+  console.log('largeImageURL from modal props: ', largeImageURL);
+  return (
+    <li className={styles.ImageGalleryItem}>
+      <img
+        src={webformatURL}
+        alt={`${altTitle} found by ${tags} tags`}
+        // modalurl={largeImageURL}
+        className={styles.ImageGalleryItem_image}
+        onClick={() => onClick({ largeImageURL })}
+        // onClick={onClick}
+      />
+    </li>
+  );
+};
 
 ImageGalleryItem.propTypes = {
   //   key: PropTypes.number.isRequired,

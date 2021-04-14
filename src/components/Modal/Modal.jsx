@@ -39,13 +39,13 @@ const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
   static propTypes = {
-    onClose: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
     console.log('modal componentDidMount');
     console.log(
-      'componentDidMount -> window.addEventListener(keydown, this.handleKeyDown)',
+      'modal componentDidMount -> window.addEventListener(keydown, this.handleKeyDown)',
       window.addEventListener('keydown', this.handleKeyDown),
     );
     window.addEventListener('keydown', this.handleKeyDown);
@@ -62,23 +62,26 @@ class Modal extends Component {
 
     if (e.code === 'Escape') {
       console.log('this.props: ', this.props);
-      // this.props.onClose();
       console.log('this.props.onClick(): ', this.props.onClick());
-      // this.props.onClick();
       this.props.onClick();
-      this.props.onClose();
     }
   };
 
   handleBackdropClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.onClose();
-      // this.props.onClick();
+      console.log('e.target in handleBackdrop: ', e.target);
+      console.log('e.currentTarget in handleBackdrop: ', e.currentTarget);
+      console.log(
+        'this.props.onClick() in handlebackdrop: ',
+        this.props.onClick,
+      );
+      this.props.onClick();
     }
   };
 
   render() {
     return createPortal(
+      // <div className={styles.modalBackdrop} onClose={this.handleBackdropClick}>
       <div className={styles.modalBackdrop} onClick={this.handleBackdropClick}>
         {/* <div className={styles.Overlay} onClick={this.handleBackdropClick}>
          <div className={styles.Modal}>{this.props.children}</div> */}
@@ -89,9 +92,8 @@ class Modal extends Component {
   }
 }
 
-// Modal.propTypes = {
-//   onClose: PropTypes.func.isRequired,
-//   onClick: PropTypes.func,
-// };
+Modal.propTypes = {
+  onClick: PropTypes.func,
+};
 
 export default Modal;
