@@ -7,6 +7,7 @@ import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
 import Modal from './Modal';
+import Error from './Error';
 
 import styles from './App.module.scss';
 
@@ -19,17 +20,18 @@ import IconButton from '@material-ui/core/IconButton';
 // //=======================================================
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.listRef = React.createRef();
-  // }
+  constructor(props) {
+    super(props);
+    this.listRef = React.createRef();
+  }
 
   state = {
     images: [],
     searchQuery: '',
     currentPage: 1,
 
-    error: null,
+    error: 5555555555,
+    // error: null,
     modalURL: '',
     scrollScr: false,
     enterError: false,
@@ -43,33 +45,33 @@ class App extends Component {
       this.fetchImage();
     }
 
-    // //==========================for scrol=========================
-    // if (snapshot !== null) {
-    //   const list = this.listRef.current;
-    //   console.log('snapshot: ', list.scrollHeight, snapshot);
-    //   if (this.state.scrollScr) {
-    //     window.scrollTo({
-    //       top:
-    //         document.documentElement.scrollTop + (list.scrollHeight - snapshot),
-    //       behavior: 'smooth',
-    //     });
-    //   } else {
-    //     this.setState({ scrollScr: true });
-    //   }
-    // }
-    // //============================================================
+    //==========================for scrol=========================
+    if (snapshot !== null) {
+      const list = this.listRef.current;
+      // console.log('snapshot: ', list.scrollHeight, snapshot);
+      if (this.state.scrollScr) {
+        window.scrollTo({
+          top:
+            document.documentElement.scrollTop + (list.scrollHeight - snapshot),
+          behavior: 'smooth',
+        });
+      } else {
+        this.setState({ scrollScr: true });
+      }
+    }
+    //============================================================
   }
 
   //============================================================
   // Пример прокрутки взят из документации https://ru.reactjs.org/docs/react-component.html#getsnapshotbeforeupdate
-  // getSnapshotBeforeUpdate(prevProps, prevState) {
-  //   if (prevState.images.length < this.state.images.length) {
-  //     const list = this.listRef.current;
-  //     // console.log("set snapshot: ", list.scrollHeight, list.scrollTop)
-  //     return list.scrollHeight - list.scrollTop;
-  //   }
-  //   return null;
-  // }
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    if (prevState.images.length < this.state.images.length) {
+      const list = this.listRef.current;
+      // console.log("set snapshot: ", list.scrollHeight, list.scrollTop)
+      return list.scrollHeight - list.scrollTop;
+    }
+    return null;
+  }
   //============================================================
 
   addImages = query => {
@@ -78,7 +80,7 @@ class App extends Component {
       images: [],
       currentPage: 1,
       error: null,
-      // scrollScr: false, // - for scroll
+      scrollScr: false, // - for scroll
     });
   };
 
@@ -100,12 +102,21 @@ class App extends Component {
         })),
       )
       // .catch(error => this.setState({ error }))
+
       // .catch(() => {
       //   this.setState(({ showModal }) => ({ showModal: !showModal }));
       .catch(() => {
-        this.handelToggleModal();
+        this.handelErrorMessage();
       })
       .finally(() => this.setState({ isLoading: false }));
+  };
+
+  handelErrorMessage = er => {
+    // const { error, images, searchQuery } = this.state;
+    // if (images.length === 0 && searchQuery.length > 0) {
+    //   this.setState({ error: er });
+    console.log('er: ', er);
+    this.handelToggleModal();
   };
 
   handelToggleModal = () => {
@@ -113,12 +124,9 @@ class App extends Component {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
   }; //- переключатель модального окна
 
-  getModalImage = largeImageURL => {
-    const { modalURL } = this.state;
-    console.log(`modalURL`, modalURL);
-    // this.setState({ modalURL: largeImageURL }.modalurl);
-    this.setState({ modalURL: largeImageURL });
-    this.handelToogleModal();
+  getModalImage = largeImage => {
+    this.setState({ modalURL: largeImage.largeImageURL });
+    this.handelToggleModal();
   };
 
   render() {
@@ -128,17 +136,17 @@ class App extends Component {
       isLoading,
       searchQuery,
       modalURL,
-      largeImageURL,
       error,
     } = this.state;
 
     return (
-      // <div className={styles.App} ref={this.listRef}>
-      <div className={styles.App}>
+      <div className={styles.App} ref={this.listRef}>
         <Container>
           <h1>Hello HW 03-image</h1>
         </Container>
+
         <Searchbar onSubmit={this.addImages} />
+
         <Container>
           {isLoading && <ImageGrid />}
           {images.length > 0 ? (
@@ -146,19 +154,20 @@ class App extends Component {
               <ImageGallery
                 images={images}
                 title={searchQuery}
-                onClick={this.handelToggleModal}
+                onClick={this.getModalImage}
               ></ImageGallery>
+
               {showModal && (
-                <Modal
-                  // onClick={this.getModalImage}
-                  // modalURL={modalURL}
-                  modalURL={largeImageURL}
-                  onClick={this.handelToggleModal}
-                >
+                <Modal onClick={this.handelToggleModal}>
                   <IconButton onClick={this.handelToggleModal}>
                     <HighlightOffOutlinedIcon />
                   </IconButton>
-                  <img src={modalURL} alt={searchQuery} />
+                  <img
+                    src={modalURL}
+                    width="1200"
+                    height="800"
+                    alt={searchQuery}
+                  />
                 </Modal>
               )}
             </>
@@ -167,7 +176,13 @@ class App extends Component {
               Here you will receive images after searching...
             </p>
           )}
+          {/* ================in case of error===================== */}
           {images.length === 0 && searchQuery.length > 0 && (
+            <p className={styles.errorText}>
+              oooooopppppsss it looks there is nothing to show
+            </p>
+          )}
+          {/* {images.length === 0 && searchQuery.length > 0 && (
             <Modal onClick={this.handelToggleModal}>
               <button
                 type="button"
@@ -180,8 +195,20 @@ class App extends Component {
                 oooooopppppsss it looks there is nothing to show
               </p>
             </Modal>
-          )}
+          )} */}
+          {/* {images.length === 0 && searchQuery.length > 0 && (
+            <Modal onClick={this.handelToggleModal}>
+              <IconButton onClick={this.handelToggleModal}>
+                <HighlightOffOutlinedIcon />
+              </IconButton>
+              <Error
+                error={this.handelErrorMessage}
+                addText="lalalalalalallal"
+              />
+            </Modal>
+          )} */}
         </Container>
+        {/* ==================Button for LoadMore=================== */}
         <Container>
           {images.length > 0 && (
             <Button onClick={this.fetchImage} isLoading={isLoading} />

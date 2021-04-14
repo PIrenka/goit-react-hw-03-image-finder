@@ -9,8 +9,8 @@ import 'modern-normalize/modern-normalize.css';
 import styles from './components/App.module.scss';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App className={styles.App} />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <App className={styles.App} />,
+  // </React.StrictMode>,
   document.getElementById('root'),
 );

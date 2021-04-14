@@ -6,8 +6,6 @@ const ImageGrid = props => (
     width={800}
     height={575}
     viewBox="0 0 800 575"
-    // backgroundColor="#f3f3f3"
-    // foregroundColor="#ecebeb"
     backgroundColor="#f5dbee"
     foregroundColor="#f69dd5"
     {...props}

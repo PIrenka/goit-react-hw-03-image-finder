@@ -20,16 +20,17 @@ const ImageGallery = ({ images, title, onClick }) => {
 };
 
 ImageGallery.propTypes = {
-  // images: PropTypes.arrayOf(
-  //   PropTypes.shape({
-  //     id: PropTypes.number,
-  //     webformatURL: PropTypes.string,
-  //     largeImageURL: PropTypes.string,
-  //   }),
-  // ),
-  images: PropTypes.arrayOf(PropTypes.object),
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      webformatURL: PropTypes.string,
+      largeImageURL: PropTypes.string,
+      tags: PropTypes.string.isRequired,
+    }),
+  ),
+  // images: PropTypes.arrayOf(PropTypes.object),
   title: PropTypes.string,
-  // onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;
