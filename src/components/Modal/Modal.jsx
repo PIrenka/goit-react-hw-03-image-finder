@@ -38,20 +38,34 @@ import styles from './stylesModal.module.scss';
 const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
-  // static propTypes = {
-  //   onClose: PropTypes.func.isRequired,
-  // };
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
+  };
 
   componentDidMount() {
+    console.log('modal componentDidMount');
+    console.log(
+      'componentDidMount -> window.addEventListener(keydown, this.handleKeyDown)',
+      window.addEventListener('keydown', this.handleKeyDown),
+    );
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
+    console.log('modal componentWillUnmount');
+
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   handleKeyDown = e => {
+    console.log('e.code: ', e.code);
+
     if (e.code === 'Escape') {
+      console.log('this.props: ', this.props);
+      // this.props.onClose();
+      console.log('this.props.onClick(): ', this.props.onClick());
+      // this.props.onClick();
+      this.props.onClick();
       this.props.onClose();
     }
   };
@@ -59,24 +73,25 @@ class Modal extends Component {
   handleBackdropClick = e => {
     if (e.currentTarget === e.target) {
       this.props.onClose();
+      // this.props.onClick();
     }
   };
 
   render() {
     return createPortal(
-      // <div className={styles.modalBackdrop} onClick={this.handleBackdropClick}>
-      <div className={styles.Overlay} onClick={this.handleBackdropClick}>
-        <div className={styles.Modal}>{this.props.children}</div>
-        {/* <div className={styles.modal}>{this.props.children}</div> */}
+      <div className={styles.modalBackdrop} onClick={this.handleBackdropClick}>
+        {/* <div className={styles.Overlay} onClick={this.handleBackdropClick}>
+         <div className={styles.Modal}>{this.props.children}</div> */}
+        <div className={styles.modal}>{this.props.children}</div>
       </div>,
       modalRoot,
     );
   }
 }
 
-Modal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-};
+// Modal.propTypes = {
+//   onClose: PropTypes.func.isRequired,
+//   onClick: PropTypes.func,
+// };
 
 export default Modal;

@@ -29,7 +29,7 @@ ImageGallery.propTypes = {
   // ),
   images: PropTypes.arrayOf(PropTypes.object),
   title: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  // onClick: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;

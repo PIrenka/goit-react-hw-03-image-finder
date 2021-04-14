@@ -1,10 +1,15 @@
 .App {
   text-align: center;
-  background-color: aquamarine;
 }
-// .App {
-//   display: grid;
-//   grid-template-columns: 1fr;
-//   grid-gap: 16px;
-//   padding-bottom: 24px;
-// }
+
+.introText {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 40px;
+}
+.errorText {
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(233, 23, 93);
+  // margin-top: 40px;
+}

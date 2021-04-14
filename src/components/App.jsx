@@ -48,7 +48,7 @@ class App extends Component {
   };
 
   fetchImage = () => {
-    const { searchQuery, currentPage } = this.state;
+    const { searchQuery, currentPage, showModal } = this.state;
     this.setState({ isLoading: true });
 
     if (searchQuery.length <= 2) {
@@ -64,20 +64,24 @@ class App extends Component {
           currentPage: prevState.currentPage + 1,
         })),
       )
-      .catch(error => this.setState({ error }))
+      // .catch(error => this.setState({ error }))
+      .catch(() => {
+        this.handelToggleModal();
+      })
       .finally(() => this.setState({ isLoading: false }));
   };
 
   handelToggleModal = () => {
     console.log('use toggle modal');
-    return this.setState(({ showModal }) => {
-      return { showModal: !showModal };
-    });
-  };
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  }; //- переключатель модального окна
 
   getModalImage = largeImageURL => {
-    this.setState({ modalURL: largeImageURL }.modalurl);
-    this.toogleModal();
+    const { modalURL } = this.state;
+    console.log(`modalURL`, modalURL);
+    // this.setState({ modalURL: largeImageURL }.modalurl);
+    this.setState({ modalURL: largeImageURL });
+    this.handelToogleModal();
   };
 
   render() {
@@ -98,61 +102,66 @@ class App extends Component {
         <Container>
           {isLoading && <ImageGrid />}
           {images.length > 0 ? (
-            <ImageGallery
-              images={images}
-              title={searchQuery}
-              onClick={this.getModalImage}
-            >
-              <Modal modalURL={modalURL} onClose={this.handelToggleModal}>
+            <>
+              <ImageGallery
+                images={images}
+                title={searchQuery}
+                onClick={this.handelToggleModal}
+              >
+                {/* <Modal modalURL={modalURL} onClose={this.getModalImage}>
                 <img src={modalURL} alt="" />
-              </Modal>
-            </ImageGallery>
+              </Modal> */}
+              </ImageGallery>
+              {showModal && (
+                <Modal modalURL={modalURL} onClick={this.handelToggleModal}>
+                  <IconButton onClick={this.handelToggleModal}>
+                    <HighlightOffOutlinedIcon />
+                  </IconButton>
+                  <img src={modalURL} alt="" />
+                </Modal>
+              )}
+              {/* <Modal
+                modalURL={modalURL}
+                // onClose={this.getModalImage}
+                onClick={this.handelToggleModal}
+              >
+                <img src={modalURL} alt="" />
+              </Modal> */}
+            </>
           ) : (
-            <p>Here you will receive images after searching...</p>
+            <p className={styles.introText}>
+              Here you will receive images after searching...
+            </p>
           )}
           {images.length === 0 && searchQuery.length > 0 && (
-            <p>oooooopppppsss it looks there is nothing to show</p>
+            <Modal
+              onClick={this.handelToggleModal}
+              onClose={this.handelToggleModal}
+            >
+              }
+              <button
+                type="button"
+                // onClick={({ showModal }) => ({ showModal: !showModal })}
+                onClose={this.handelToggleModal}
+              >
+                XXX CLOSE XXX
+              </button>
+              <p className={styles.errorText}>
+                oooooopppppsss it looks there is nothing to show
+              </p>
+            </Modal>
           )}
+          {/* {images.length === 0 && searchQuery.length > 0 && (
+            <p>oooooopppppsss it looks there is nothing to show</p>
+          )} */}
         </Container>
         <Container>
           {images.length > 0 && (
             <Button onClick={this.fetchImage} isLoading={isLoading} />
           )}
         </Container>
-        {/* 
-        {showModal && (
-          //         <>
-          //           <Loader
-          //             type="ThreeDots"
-          //             color="#f5dbee"
-          //             height={80}
-          //             width={80}
-          //             timeout={1000} //
-          //           />
-          <Modal
-            onClick={this.handelToggleModal}
-            onClose={this.handelToggleModal}
-          >
-            <>
-              <h1>modal</h1>
-              <IconButton onClose={this.handelToggleModal}>
-                <HighlightOffOutlinedIcon />
-              </IconButton>
-              <p>the body of the modal</p>
-              {<img src={modalURL} />}
-              <button type="button" onClick={this.handelToggleModal}>
-                close
-              </button>
-            </>
-          </Modal>
-        )} */}
-
-        {/* <ImageGallery list={images} onClick={this.openModal} />
-        {showModal && (
-          <Modal onClose={this.closeModal}>
-            <img src={imageForModal} alt="" />
-          </Modal>
-        )}  */}
+        ================================================================================
+        ================================================================================
       </div>
     );
   }
