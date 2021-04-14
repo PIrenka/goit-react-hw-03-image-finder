@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# добавляю файл со своим апи ключем, чтоб не было видно
+src\servicesApi\apiKey.js
