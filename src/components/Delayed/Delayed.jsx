@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class Delayed extends React.Component {
+class Delayed extends Component {
   constructor(props) {
     super(props);
     this.state = { hidden: true };
   }
 
   componentDidMount() {
+    console.log('this.props.waitBeforeShow: ', this.props.waitBeforeShow);
     setTimeout(() => {
       this.setState({ hidden: false });
     }, this.props.waitBeforeShow);

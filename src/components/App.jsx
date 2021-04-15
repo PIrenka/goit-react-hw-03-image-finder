@@ -179,12 +179,17 @@ class App extends Component {
           )}
           {/* ================in case of error===================== */}
           {images.length === 0 && searchQuery.length > 0 && (
+            <p className={styles.errorText}>
+              oooooopppppsss it looks there is nothing to show
+            </p>
+          )}
+          {/* {images.length === 0 && searchQuery.length > 0 && (
             <Delayed waitBeforeShow={1500}>
               <p className={styles.errorText}>
                 oooooopppppsss it looks there is nothing to show
               </p>
             </Delayed>
-          )}
+          )} */}
 
           {/* {images.length === 0 && searchQuery.length > 0 && (
             <Modal onClick={this.handelToggleModal}>
