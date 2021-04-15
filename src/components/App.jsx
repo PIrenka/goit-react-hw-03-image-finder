@@ -8,6 +8,7 @@ import ImageGallery from './ImageGallery';
 import Button from './Button';
 import Modal from './Modal';
 import Error from './Error';
+import Delayed from './Delayed';
 
 import styles from './App.module.scss';
 
@@ -178,10 +179,13 @@ class App extends Component {
           )}
           {/* ================in case of error===================== */}
           {images.length === 0 && searchQuery.length > 0 && (
-            <p className={styles.errorText}>
-              oooooopppppsss it looks there is nothing to show
-            </p>
+            <Delayed waitBeforeShow={1500}>
+              <p className={styles.errorText}>
+                oooooopppppsss it looks there is nothing to show
+              </p>
+            </Delayed>
           )}
+
           {/* {images.length === 0 && searchQuery.length > 0 && (
             <Modal onClick={this.handelToggleModal}>
               <button
