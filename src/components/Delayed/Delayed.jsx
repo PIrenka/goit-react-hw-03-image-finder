@@ -7,13 +7,18 @@ class Delayed extends Component {
     this.state = { hidden: true };
   }
 
+  delayedTimer = null;
+
   componentDidMount() {
     console.log('this.props.waitBeforeShow: ', this.props.waitBeforeShow);
-    setTimeout(() => {
+    this.delayedTimer = setTimeout(() => {
       this.setState({ hidden: false });
     }, this.props.waitBeforeShow);
   }
-
+  componentWillUnmount(delayedTimer) {
+    // const { delayedTimer } = this.setState;
+    clearTimeout(this.delayedTimer);
+  }
   render() {
     return this.state.hidden ? '' : this.props.children;
   }

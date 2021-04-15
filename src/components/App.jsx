@@ -102,13 +102,13 @@ class App extends Component {
           currentPage: prevState.currentPage + 1,
         })),
       )
-      // .catch(error => this.setState({ error }))
+      .catch(error => this.setState({ error }))
 
       // .catch(() => {
       //   this.setState(({ showModal }) => ({ showModal: !showModal }));
-      .catch(() => {
-        this.handelErrorMessage();
-      })
+      // .catch(() => {
+      //   this.handelErrorMessage();
+      // })
       .finally(() => this.setState({ isLoading: false }));
   };
 
@@ -178,18 +178,18 @@ class App extends Component {
             </p>
           )}
           {/* ================in case of error===================== */}
-          {images.length === 0 && searchQuery.length > 0 && (
+          {/* {images.length === 0 && searchQuery.length > 0 && (
             <p className={styles.errorText}>
               oooooopppppsss it looks there is nothing to show
             </p>
-          )}
-          {/* {images.length === 0 && searchQuery.length > 0 && (
-            <Delayed waitBeforeShow={1500}>
+          )} */}
+          {images.length === 0 && searchQuery.length > 0 && (
+            <Delayed waitBeforeShow={500}>
               <p className={styles.errorText}>
                 oooooopppppsss it looks there is nothing to show
               </p>
             </Delayed>
-          )} */}
+          )}
 
           {/* {images.length === 0 && searchQuery.length > 0 && (
             <Modal onClick={this.handelToggleModal}>
